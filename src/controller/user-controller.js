@@ -2,7 +2,8 @@ const User = require("../models/user-model");
 
 async function getAllUsers(req, reply) {
     try {
-        reply.send("not implanted yet")
+        const users = await User.find();
+        reply.send(users);
     } catch (err) {
         reply.status(500).send(err)
 
@@ -13,7 +14,8 @@ async function getAllUsers(req, reply) {
 
 async function getUserById(req, reply) {
     try {
-        reply.send("not implanted yet")
+        const user = await User.findById(req.params.id)
+        reply.send(user)
     } catch (err) {
         reply.status(500).send(err)
 
@@ -23,7 +25,9 @@ async function getUserById(req, reply) {
 
 async function createUser(req, reply) {
     try {
-        reply.send("not implanted yet")
+        const user = new User(req.body);
+        const result = user.save();
+        reply.send(result)
     } catch (err) {
         reply.status(500).send(err)
 
@@ -32,7 +36,8 @@ async function createUser(req, reply) {
 
 async function updateUser(req, reply) {
     try {
-        reply.send("not implanted yet")
+        const user=
+        reply.send()
     } catch (err) {
         reply.status(500).send(err)
 
