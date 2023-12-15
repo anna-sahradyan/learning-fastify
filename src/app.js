@@ -10,7 +10,9 @@ const configureDatabase = () => {
 }
 const configureRoutes = () => {
     const userRoutes = require("./routes/user-routes");
+    const projectRoutes = require("./routes/project-routes");
     fastify.register(userRoutes, {prefix: "/api/v1/users"})
+    fastify.register(projectRoutes, {prefix: "/api/v1/projects"})
 }
 const startServer = async () => {
     try {
@@ -27,8 +29,8 @@ const startServer = async () => {
 
 
 const start = async () => {
-   configureRoutes();
-   configureDatabase();
-   await  startServer();
+    configureRoutes();
+    configureDatabase();
+    await startServer();
 }
 start();

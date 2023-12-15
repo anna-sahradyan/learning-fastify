@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./user-model");
+
 const ProjectSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -8,7 +9,7 @@ const ProjectSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        trim: true
+        trim: true,
     },
     startDate: {
         type: Date,
@@ -25,15 +26,23 @@ const ProjectSchema = new mongoose.Schema({
         validate: {
             validator: async function (v) {
                 const user = await User.findById(v);
-                return ["Admin", "Project Manager", "Team Member"].includes(user.role)
+                console.log("User:", user);
+                const isValidRole = ["Admin", "Project Manager"].includes(user.role);
+                if (!isValidRole) {
+                    console.log("Invalid role for the project manager");
+                }
+                return isValidRole;
             },
             message: (props) => `User must be either "Admin" or "Project Manager"`
-        }
+        },
     },
-    teamMembers: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }]
+    teamMembers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ]
 });
+
 const Project = mongoose.model("Project", ProjectSchema);
 module.exports = Project;
