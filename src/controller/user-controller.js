@@ -25,7 +25,7 @@ async function getUserById(req, reply) {
 
 async function createUser(req, reply) {
     try {
-        const {firstName, lastName, email} = req.body;
+        const {firstName, lastName, email, role} = req.body;
         if (!firstName || !email || !lastName) {
             reply.status(400);
             throw new Error("Please fill in all required fields");
@@ -37,7 +37,7 @@ async function createUser(req, reply) {
         }
         //?create new user
         const user = await User.create({
-            firstName, lastName, email
+            firstName, lastName, email, role
         })
         const result = user.save();
         reply.send(result)
