@@ -60,9 +60,9 @@ const updateProject = async (req, reply) => {
       const projectManager = await User.findById(updates.projectManager);
       if (
         !projectManager ||
-        !["Admin", "Project Manager"].includes(projectManager.role)
+        !['Admin', 'Project Manager'].includes(projectManager.role)
       ) {
-        return reply.status(400).send({ message: "Invalid project manager" });
+        return reply.status(400).send({ message: 'Invalid project manager' });
       }
     }
     if (updates.teamMembers) {
@@ -83,7 +83,7 @@ const updateProject = async (req, reply) => {
     if (!updatedProject) {
       return reply
         .status(404)
-        .send({ message: "No project with that id found" });
+        .send({ message: 'No project with that id found' });
     }
 
     reply.send(updatedProject);
@@ -92,10 +92,28 @@ const updateProject = async (req, reply) => {
   }
 
 };
+const deleteProject = async (req, reply) => {
+  try {
+    const id = req.params.id;
+    const deleteProject = await Project.findByIdAndDelete(id);
+    if(!deleteProject){
+      return reply.status(404).send({message:"No project with that id found "})
+    }
+    else{
+      reply.status(204).send(deleteProject);
+    }
+
+  } catch (err) {
+    reply.status(400).send(err);
+  }
+
+};
+
 
 module.exports = {
   createProject,
   getAllProjects,
   getUserById,
-  updateProject
+  updateProject,
+  deleteProject
 };

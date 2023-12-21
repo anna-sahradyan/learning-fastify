@@ -7,6 +7,7 @@ async function routes(fastify, options) {
   fastify.get('/', projectController.getAllProjects);
   fastify.get('/:id', projectController.getUserById);
   fastify.put('/:id', projectController.updateProject);
+  fastify.delete('/:id', projectController.deleteProject);
 
 }
 
