@@ -66,7 +66,7 @@ const updateProject = async (req, reply) => {
       }
     }
     if (updates.teamMembers) {
-      for (let memberId of updates.teamMembers) {
+      for (const memberId of updates.teamMembers) {
         const teamMember = await User.findById(memberId);
         if (!teamMember) {
           return reply
@@ -96,10 +96,10 @@ const deleteProject = async (req, reply) => {
   try {
     const id = req.params.id;
     const deleteProject = await Project.findByIdAndDelete(id);
-    if(!deleteProject){
-      return reply.status(404).send({message:"No project with that id found "})
-    }
-    else{
+    if (!deleteProject) {
+      return reply.status(404)
+        .send({ message: 'No project with that id found ' });
+    } else {
       reply.status(204).send(deleteProject);
     }
 
