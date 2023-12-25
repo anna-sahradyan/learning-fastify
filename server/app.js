@@ -1,6 +1,8 @@
 'use strict';
 const fastify = require('fastify')({ logger: true });
 const mongoose = require('mongoose');
+
+
 require('dotenv').config();
 const configureDatabase = () => {
   mongoose.connect(process.env.MONGODB_URI, {
@@ -16,6 +18,7 @@ const configureRoutes = () => {
   fastify.register(userRoutes, { prefix: '/api/v1/users' });
   fastify.register(projectRoutes, { prefix: '/api/v1/projects' });
 };
+
 
 const startServer = async () => {
   try {

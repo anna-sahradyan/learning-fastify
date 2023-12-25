@@ -1,12 +1,11 @@
 'use strict';
-
 const userController = require('../controller/user-controller');
-const auth = require('../middlewares/auth');
+const { basicAuth, apiKeyAuth } = require('../middlewares/auth');
 
 async function routes(fastify, options) {
   fastify.get('/', userController.getAllUsers);
   fastify.get('/:id', userController.getUserById);
-  fastify.post('/', { preHandler: auth }, userController.createUser);
+  fastify.post('/', { preHandler: basicAuth}, userController.createUser);
   fastify.put('/:id', userController.updateUser);
   fastify.delete('/:id', userController.deleteUser);
 }
