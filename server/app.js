@@ -1,16 +1,12 @@
 'use strict';
 const fastify = require('fastify')({ logger: true });
-const mongoose = require('mongoose');
-
+const configureDatabase = require('./config/databaseDB');
 
 require('dotenv').config();
-const configureDatabase = () => {
-  mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-    .then(() => console.log('Connected to the database'))
-    .catch(e => console.log(' Error connecting to database', e));
+
+const databaseConfig = {
+  uri: process.env.MONGODB_URI,
+  options: {}
 };
 const configureRoutes = () => {
   const userRoutes = require('./routes/user-routes');
@@ -22,21 +18,33 @@ const configureRoutes = () => {
 
 const startServer = async () => {
   try {
-    await fastify.listen(process.env.PORT || 5000);
-    fastify.log.info(
-      `Server is running on port ${fastify.server.address().port} `
-    );
-
+    await fastify.listen({
+      port: process.env.PORT || 8000,
+    });
+    fastify.log.info(`Server is running on port ${fastify.server.address().port}`);
   } catch (err) {
     console.error(err);
   }
-
 };
-
 
 const start = async () => {
-  configureRoutes();
-  configureDatabase();
-  await startServer();
+  try {
+    await configureDatabase(databaseConfig);
+    configureRoutes();
+    await startServer();
+  } catch (err) {
+    console.error('Error during startup', err);
+    process.exit(1);
+  }
 };
+process.on('SIGINT', async () => {
+  try {
+    await mongoose.connection.close();
+    process.exit(0);
+  } catch (err) {
+    console.error('Error closing Mongoose connection', err);
+    process.exit(1);
+  }
+});
+
 start();
