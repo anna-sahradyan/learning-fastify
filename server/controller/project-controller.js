@@ -25,6 +25,7 @@ async function createProject(request, reply) {
     const project = new Project(request.body);
     await project.save();
     reply.send(project);
+    console.log('Project Manager Role:', projectManager.role);
   } catch (error) {
     reply.status(400).send(error);
   }

@@ -1,3 +1,4 @@
+'use strict';
 const mongoose = require('mongoose');
 const configureDatabase = async ({ uri, options }) => {
   try {
@@ -10,3 +11,4 @@ const configureDatabase = async ({ uri, options }) => {
   }
 };
 module.exports = configureDatabase;
+

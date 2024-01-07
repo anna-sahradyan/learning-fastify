@@ -1,5 +1,6 @@
 'use strict';
 const fastify = require('fastify')({ logger: true });
+const mongoose = require('mongoose');
 const configureDatabase = require('./config/databaseDB');
 
 require('dotenv').config();
@@ -21,11 +22,14 @@ const startServer = async () => {
     await fastify.listen({
       port: process.env.PORT || 8000,
     });
-    fastify.log.info(`Server is running on port ${fastify.server.address().port}`);
+    fastify.log.info(`Server is running on port
+     ${fastify.server.address().port}`);
   } catch (err) {
     console.error(err);
   }
 };
+
+
 
 const start = async () => {
   try {
@@ -40,10 +44,10 @@ const start = async () => {
 process.on('SIGINT', async () => {
   try {
     await mongoose.connection.close();
-    process.exit(0);
+    process.exit(0);//!Если соединение с базой данных успешно закрывается, процесс завершается с кодом состояния 0. Код состояния 0 обычно указывает на успешный и чистый выход.
   } catch (err) {
     console.error('Error closing Mongoose connection', err);
-    process.exit(1);
+    process.exit(1);//! При возникновении ошибки процесс завершается с кодом состояния 1. Ненулевой код состояния обычно указывает на ошибку или ненормальный выход.
   }
 });
 

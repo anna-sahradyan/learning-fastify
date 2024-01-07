@@ -1,5 +1,9 @@
 'use strict';
 const User = require('../models/user-model');
+const jwt = require('jsonwebtoken');
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.APIKEY, { expiresIn: '1d' });
+};
 
 async function getAllUsers(req, reply) {
   try {
@@ -10,8 +14,7 @@ async function getAllUsers(req, reply) {
 
   }
 
-
-}
+};
 
 async function getUserById(req, reply) {
   try {
@@ -23,30 +26,53 @@ async function getUserById(req, reply) {
   }
 
 }
-
 async function createUser(req, reply) {
   try {
-    const { firstName, lastName, email, role,password } = req.body;
+    const { firstName, lastName, email, role, password } = req.body;
+
     if (!firstName || !email || !lastName) {
-      reply.status(400);
+      reply.code(400);
       throw new Error('Please fill in all required fields');
     }
+
     const userExist = await User.findOne({ email });
+
     if (userExist) {
-      reply.status(400);
+      reply.code(400);
       throw new Error('Email has already been created');
     }
-    //?create new user
-    const user = await User.create({
-      firstName, lastName, email, role, password
-    });
-    const result = user.save();
-    reply.send(result);
-  } catch (err) {
-    reply.status(500).send(err);
 
+    // Create a new user
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      role,
+      password,
+    });
+
+    const token = generateToken(user._id);
+
+    if (user) {
+      const { _id, email, firstName, lastName, role, password } = user;
+      reply.code(201).send({
+        _id,
+        email,
+        firstName,
+        lastName,
+        token,
+        role,
+        password,
+      });
+    } else {
+      reply.code(400);
+      throw new Error('Invalid user data');
+    }
+  } catch (err) {
+    reply.code(500).send(err.message);
   }
 }
+
 
 async function updateUser(req, reply) {
   try {
