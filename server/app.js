@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 const fastify = require('fastify')({ logger: true });
 const mongoose = require('mongoose');
 const configureDatabase = require('./config/databaseDB');
@@ -30,11 +30,10 @@ const startServer = async () => {
 };
 
 
-
 const start = async () => {
   try {
     await configureDatabase(databaseConfig);
-    configureRoutes();
+   configureRoutes();
     await startServer();
   } catch (err) {
     console.error('Error during startup', err);
